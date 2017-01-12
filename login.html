@@ -107,9 +107,9 @@
 				}						
 				
 				var data = {
-					cmd:'login',
-				    un: $("#inputEmail").val(),
-				    pwd: CryptoJS.MD5($("#inputPassword").val()).toString(),
+					grant_type:'password',
+				  username: $("#inputEmail").val(),
+				  password: CryptoJS.MD5($("#inputPassword").val()).toString(),
 				};
 				
 				$("#btn_go").click(function(e){
@@ -139,13 +139,9 @@
 				
 				$.ajax({  
 				        type: "post",  
-				        url: url_signup,  
-				        dataType: "json",
-				        contentType: 'application/json; charset=utf-8',
-					      //xhrFields: {
-					      //  withCredentials: true
-					      //},	        
-				        data: JSON.stringify(data)
+				        url: 'http://localhost:3461/oauth.ashx',
+			        	datatype:'json',
+				        data: data
 				    }).done(function (data, status) {
 				      		console.log(JSON.stringify(data));
 				       }).fail(function(data){
