@@ -85,77 +85,77 @@
 <script src="js/CryptoJS/rsa/jsbn.js"></script>
 <script src="js/CryptoJS/rsa/jsbn2.js"></script>
 <script src="js/CryptoJS/rsa/rsa.js"></script>
-<script src="js/CryptoJS/rsa/rsa2.js"></script>	
+<script src="js/CryptoJS/rsa/rsa2.js"></script>
+<script src="js/jwt-decode.min.js"></script>
 	
-	<script>
-		jQuery.support.cors = true;
-		jQuery(document).ready(function($){
-			var url_signup = "http://localhost:2644/api/values";
-			$("#signin-form").submit(function(e){
-				$("#inputEmail_info").html("");
-				$("#inputPassword_info").html("");
-				e.preventDefault();
-				
-				if($("#inputEmail").val() == ""){
-					$("#inputEmail_info").html("请输入用户名");
-					return;
-				}
-				
-				if($("#inputPassword").val() == ""){
-					$("#inputPassword_info").html("请输入密码");
-					return;
-				}						
-				
-				var data = {
-					grant_type:'password',
-				  username: $("#inputEmail").val(),
-				  password: CryptoJS.MD5($("#inputPassword").val()).toString(),
-				};
-				
-				$("#btn_go").click(function(e){
-					e.preventDefault();
-					var jqxhr = $.post(  "http://localhost/sap_ashx/QueryInfo.ashx",
-						{xhrFields: {
-							withCredentials: true
-						},
-						crossDomain: true})
-						.done(function(data) {
-					    	console.log(JSON.stringify(data));
-						})
-						.fail(function(data) {
-					    	alert( "error" + JSON.stringify(data));
-						})
-						.always(function(data) {
-					    }
-					);					
-						
-					
-				});
-				
-				
-				
-				
-				console.log(JSON.stringify(data));
-				
-				$.ajax({  
-				        type: "post",  
-				        url: 'http://localhost:3461/oauth.ashx',
-			        	datatype:'json',
-				        data: data
-				    }).done(function (data, status) {
-				      		console.log(JSON.stringify(data));
-				       }).fail(function(data){
-				        	console.log(JSON.stringify(data));
-				       });
-								
+<script>
+	jQuery.support.cors = true;
+	jQuery(document).ready(function($){
+		$("#signin-form").submit(function(e){
+			$("#inputEmail_info").html("");
+			$("#inputPassword_info").html("");
+			e.preventDefault();
+			
+			if($("#inputEmail").val() == ""){
+				$("#inputEmail_info").html("请输入用户名");
+				return;
+			}
+			
+			if($("#inputPassword").val() == ""){
+				$("#inputPassword_info").html("请输入密码");
+				return;
+			}						
+			
+			var data = {
+				grant_type:'password',
+			  username: $("#inputEmail").val(),
+			  password: CryptoJS.MD5($("#inputPassword").val()).toString(),
+			};
+			
+			console.log(JSON.stringify(data));
+			
+			$.ajax({  
+			        type: "post",  
+			        url: 'http://localhost:3461/oauth.ashx',
+		        	datatype:'json',
+			        data: data
+			    }).done(function (data, status) {
+			      		console.log(JSON.stringify(data));
+			      		if(data.access_token == ""){
+			      			login_fail(data.msg);
+			      		}else{
+			      			
+			      			decjwts(data.access_token);
+			      			localStorage.setItem("token",data.access_token);
+			      			window.location = "./";
+			      		}
+			       }).fail(function(data){
+			        	console.log(JSON.stringify(data));
+			        	login_fail(data.msg);
+			       });
+							
 
-								
-			});
-			
-			
+							
 		});
-  	
-  	</script>
+		
+		
+	});
+	
+	function login_fail(info){
+		$("#inputEmail_info").html(info);
+	}
+	
+	function decjwts(data){
+		var decoded = jwt_decode(data);
+		console.log(decoded);
+		var dar = data.split(".");
+		var base64_dec = CryptoJS.enc.Base64.parse(dar[1]);
+		var myself = String.fromCharCode.apply(String, base64_dec)
+		console.log(myself);
+		
+	}
+
+</script>
 
 </body>
 </html>

@@ -29,18 +29,7 @@
 	<script type="text/javascript" src="http://g.alicdn.com/sj/lib/jquery/dist/jquery.min.js"></script>
 	<script type="text/javascript" src="http://g.alicdn.com/sj/dpl/1.5.1/js/sui.min.js"></script>
 <script>
-var url_signup = "http://localhost/sap_ashx/QueryInfo.ashx";
-				var jqxhr = $.post( url_signup)
-					.done(function(data) {
-				    	console.log(JSON.stringify(data));
-					})
-					.fail(function(data) {
-				    	alert( "error" + JSON.stringify(data));
-					})
-					.always(function(data) {
-				    }
-				);
-	
+console.log(localStorage.getItem("token"));
 </script>
 	</body>
 	
