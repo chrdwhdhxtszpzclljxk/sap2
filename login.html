@@ -125,7 +125,7 @@
 			      			login_fail(data.msg);
 			      		}else{
 			      			
-			      			decjwts(data.access_token);
+			      			//decjwts(data.access_token);
 			      			localStorage.setItem("token",data.access_token);
 			      			//window.location = "./";
 			      		}
@@ -152,6 +152,7 @@
 		var base64_dec = CryptoJS.enc.Base64.parse(dar[1]);
 		var myself = String.fromCharCode.apply(String, base64_dec)
 		console.log(myself);
+		return myselft;
 		
 	}
 
